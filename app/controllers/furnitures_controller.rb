@@ -11,8 +11,13 @@ class FurnituresController < ApplicationController
     end
     
     def create
-        @furniture = Furniture.create(furniture_params)
-        render json: @furniture
+        @furniture = Furniture.new(furniture_params)
+
+    if @furniture.save
+      render json: @furniture, status: :created, location: @furniture
+    else
+      render json: @furniture.errors, status: :unprocessable_entity
+    end
     end
 
     def update
@@ -28,6 +33,7 @@ class FurnituresController < ApplicationController
     end
 
     private
+
 
     def furniture_params
         params.require(:furniture).permit(:id, :furniture, :room, :store, :user_id)
